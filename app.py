@@ -1,6 +1,7 @@
 import asyncio
 import json
 import logging
+import os
 import sys
 
 import aiohttp
@@ -9,7 +10,7 @@ from robot import Bot
 
 logging.basicConfig()
 
-token = '5421859386:AAHNjtrf_waVljUu6f6SnFkWXwgHCd_7JLA'
+token = os.getenv('TOKEN')
 base_url = f'https://api.telegram.org'
 auth = f'/bot{token}'
 
