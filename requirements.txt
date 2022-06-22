@@ -1,0 +1,2 @@
+transitions==0.8.10
+aiohttp==3.8.1
