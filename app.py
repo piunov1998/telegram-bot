@@ -15,6 +15,7 @@ base_url = f'https://api.telegram.org'
 auth = f'/bot{token}'
 
 sessions: dict[str | int, Bot] = {}
+timeout = int(os.getenv('TIMEOUT', 15))
 
 
 def setup_logger():
@@ -74,8 +75,7 @@ def message_handler(msg: str, chat_id) -> dict:
 
 async def get_updates(
         session: aiohttp.ClientSession,
-        offset: int = 0,
-        timeout: int = 15
+        offset: int = 0
 ) -> dict:
     async with session.get(
             f'{auth}/getUpdates?offset={offset}&timeout={timeout}') as resp:
@@ -114,10 +114,13 @@ async def main():
             headers={'Content-Type': 'application/json'}
     ) as session:
         while running:
-            updates = await asyncio.wait_for(
-                get_updates(session, offset=offset),
-                timeout=5
-            )
+            try:
+                updates = await asyncio.wait_for(
+                    get_updates(session, offset=offset),
+                    timeout=timeout + 5
+                )
+            except asyncio.CancelledError:
+                continue
             if updates is None:
                 continue
             else:
