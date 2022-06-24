@@ -119,7 +119,8 @@ async def main():
                     get_updates(session, offset=offset),
                     timeout=timeout + 5
                 )
-            except asyncio.CancelledError:
+            except Exception as e:
+                logger.error(f'Ошибка -> {e}')
                 continue
             if updates is None:
                 continue
